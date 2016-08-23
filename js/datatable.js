@@ -652,7 +652,22 @@ DataTable.prototype = {
         }
         return keys;
     },
-
+    
+    /**
+     * Retrieve the key corresponding to the specified column.
+     * 
+     * @param idx Index of the column (number).
+     * 
+     * @return Key for the column (int or string).
+     * 
+     **/
+    getColumnIndex: function (idx) {
+        if (this.options.columns === "auto") {
+            return idx;
+        }
+        return this.options.columns[idx];
+    },
+    
     /**
      *
      * Create a select filter for the specified field.
@@ -1052,7 +1067,7 @@ DataTable.prototype = {
                     dataTable.options.sort = true;
                 }
                 else if (dataTable.options.sort === '*') {
-                    ths[i].dataset.sort = countTH;
+                    ths[i].dataset.sort = getColumnIndex(countTH);
                 }
                 else {
                     var key;
@@ -1382,6 +1397,42 @@ DataTable.prototype = {
     getCurrentPage: function () {
         return this.currentStart / this.options.pageSize + 1;
     },
+    
+    /**
+     * 
+     * Format a row of the table (fallbacks to lineFormat if available).
+     * 
+     * @param id ID of the row.
+     * @param data Data for the row
+     * 
+     * @return A tr element containing the row.
+     * 
+     **/
+    lineFormat: function (index, data) {
+        if (this.options.lineFormat instanceof Function) {
+            return this.options.lineFormat.call(this.table, index, data)
+        }
+        var keys;
+        var res = document.createElement('tr');
+        res.dataset.id = index;
+        if (this.options.lineFormat instanceof Array) {
+            keys = this.options.lineFormat;
+        }
+        else if (this.options.columns instanceof Array) {
+            keys = this.options.columns;
+        }
+        else if (this.options.columns === "auto") {
+            for (var key in data) {
+                if (data.hasOwnProperty(key)) {
+                    keys.push(key);
+                }
+            }
+        }
+        for (var i in keys) {
+            res.innerHTML += '<td>' + data[keys[i]] + '</td>';
+        }
+        return res;
+    },
 
     /**
      *
@@ -1407,8 +1458,7 @@ DataTable.prototype = {
              i++) {
             var index = this.filterIndex[this.currentStart + i];
             var data  = this.data[index];
-            this.table.tBodies[0].appendChild(this.options.lineFormat.call(this.table,
-                                                                           index, data));
+            this.table.tBodies[0].appendChild(this.lineFormat(index, data));
         }
         this.options.afterRefresh.call(this.table);
     },
@@ -1500,8 +1550,8 @@ DataTable.prototype = {
         for (var i = 0; i < this.data.length; i++) {
             var index = this.filterIndex[this.currentStart + i];
             var data  = this.data[index];
-            this.table.tBodies[0].appendChild(this.options.lineFormat.call(this.table,
-                                                                           index, data));
+            this.table.tBodies[0].appendChild(this.lineFormat(index, data));
+
         }
 
     }
@@ -1519,6 +1569,7 @@ DataTable.defaultOptions = {
     sortKey: false,
     sortDir: 'asc',
     nbColumns: -1,
+    columns: "auto",
     pageSize: 20,
     pagingNumberOfPages: 9,
     identify: false,
@@ -1548,16 +1599,7 @@ DataTable.defaultOptions = {
     filterSelectClass: 'form-control',
     beforeRefresh: function () { },
     afterRefresh: function () { },
-    lineFormat: function (id, data) {
-        var res = document.createElement('tr');
-        res.dataset.id = id;
-        for (var key in data) {
-            if (data.hasOwnProperty(key)) {
-                res.innerHTML += '<td>' + data[key] + '</td>';
-            }
-        }
-        return res;
-    }
+    lineFormat: null
 };
 
 DataTable.defaultAjaxOptions = {
