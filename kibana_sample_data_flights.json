@@ -1,0 +1,44 @@
+{
+  "_index": "kibana_sample_data_flights",
+  "_type": "_doc",
+  "_id": "S-JS1W0BJ7wufFIaPAHe",
+  "_version": 1,
+  "_seq_no": 3356,
+  "_primary_term": 1,
+  "found": true,
+  "_source": {
+    "FlightNum": "N32FE9T",
+    "DestCountry": "JP",
+    "OriginWeather": "Thunder & Lightning",
+    "OriginCityName": "Adelaide",
+    "AvgTicketPrice": 499.08518599798685,
+    "DistanceMiles": 4802.864932998549,
+    "FlightDelay": false,
+    "DestWeather": "Sunny",
+    "Dest": "Chubu Centrair International Airport",
+    "FlightDelayType": "No Delay",
+    "OriginCountry": "AU",
+    "dayOfWeek": 3,
+    "DistanceKilometers": 7729.461862731618,
+    "timestamp": "2019-10-17T11:12:29",
+    "DestLocation": {
+      "lat": "34.85839844",
+      "lon": "136.8049927"
+    },
+    "DestAirportID": "NGO",
+    "Carrier": "ES-Air",
+    "Cancelled": false,
+    "FlightTimeMin": 454.6742272195069,
+    "Origin": "Adelaide International Airport",
+    "OriginLocation": {
+      "lat": "-34.945",
+      "lon": "138.531006"
+    },
+    "DestRegion": "SE-BD",
+    "OriginAirportID": "ADL",
+    "OriginRegion": "SE-BD",
+    "DestCityName": "Tokoname",
+    "FlightTimeHour": 7.577903786991782,
+    "FlightDelayMin": 0
+  }
+}
